@@ -1,6 +1,15 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'firebase_options.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'login.dart';
+import 'person.dart';
 
-void main() {
+void main() async{
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
   runApp(const MyApp());
 }
 
@@ -33,6 +42,24 @@ class _MyHomePageState extends State<MyHomePage> {
   int _counter = 0;
   int _selectedIndex = 0;
   final String _username = "Guest"; // Replace with actual username when connected to database
+
+  void _enterProfile() {
+    SharedPreferences.getInstance().then((prefs) {
+      bool isLoggedIn = prefs.getBool('isLoggedIn') ?? false;
+      String username = prefs.getString('username') ?? '';
+
+      if (!mounted) return; // now this mounted check is valid
+
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (_) => isLoggedIn
+              ? PersonPage(username: username)
+              : const LoginPage(),
+        ),
+      );
+    });
+  }
 
   String _formattedDate() {
     final now = DateTime.now();
@@ -119,9 +146,13 @@ class _MyHomePageState extends State<MyHomePage> {
             child: BottomNavigationBar(
               currentIndex: _selectedIndex,
               onTap: (index) {
-                setState(() {
-                  _selectedIndex = index;
-                });
+                if (index == 3) {
+                  _enterProfile();
+                } else {
+                  setState(() {
+                    _selectedIndex = index;
+                  });
+                }
               },
               selectedItemColor: Colors.amber,
               unselectedItemColor: Colors.white,
