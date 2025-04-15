@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "348360784321",
+    "project_id": "financemanagement-cda2d",
+    "storage_bucket": "financemanagement-cda2d.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:348360784321:android:b6890fea62cdccdf88d740",
+        "android_client_info": {
+          "package_name": "com.example.finance_assignment"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBBACU91sctfrXobaAtj2tGTuEQSD_NAjM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
