@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'newuser.dart';
+import 'profile.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -10,6 +12,7 @@ class LoginPage extends StatefulWidget {
 class _LoginPageState extends State<LoginPage> {
   final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
+  bool _passwordVisible = false;
 
   void _validateAndLogin() {
     final username = _usernameController.text.trim();
@@ -27,7 +30,22 @@ class _LoginPageState extends State<LoginPage> {
     }
 
     // Proceed with login (temporary logic)
-    Navigator.pop(context); // Assume success for now
+    if (username == 'admin' && password == 'admin123') {
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+          builder: (context) => ProfilePage(username: username),
+        ),
+      );
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Invalid username or password'),
+          backgroundColor: Colors.red,
+          duration: Duration(seconds: 2),
+        ),
+      );
+    }
   }
 
   @override
@@ -40,6 +58,16 @@ class _LoginPageState extends State<LoginPage> {
           Image.asset(
             'assets/gold_blocks.jpg',
             fit: BoxFit.cover,
+          ),
+          Positioned(
+            top: 40,
+            left: 16,
+            child: IconButton(
+              icon: const Icon(Icons.home, color: Colors.white, size: 30),
+              onPressed: () {
+                Navigator.pop(context); // Go back to main/home page
+              },
+            ),
           ),
           Center(
             child: Padding(
@@ -71,7 +99,7 @@ class _LoginPageState extends State<LoginPage> {
                   const SizedBox(height: 16),
                   TextField(
                     controller: _passwordController,
-                    obscureText: true,
+                    obscureText: !_passwordVisible,
                     decoration: InputDecoration(
                       hintText: 'Password',
                       filled: true,
@@ -79,31 +107,49 @@ class _LoginPageState extends State<LoginPage> {
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(12),
                       ),
+                      suffixIcon: IconButton(
+                        icon: Icon(
+                          _passwordVisible ? Icons.visibility : Icons.visibility_off,
+                          color: Colors.black,
+                        ),
+                        onPressed: () {
+                          setState(() {
+                            _passwordVisible = !_passwordVisible;
+                          });
+                        },
+                      ),
                     ),
                   ),
-                  const SizedBox(height: 20),
-                  ElevatedButton(
-                    onPressed: _validateAndLogin,
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.amber,
-                      foregroundColor: Colors.black,
-                      padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 14),
-                      textStyle: const TextStyle(fontWeight: FontWeight.bold),
-                    ),
-                    child: const Text('Login'),
-                  ),
-                  const SizedBox(height: 12),
-                  ElevatedButton(
-                    onPressed: () {
-                      Navigator.pop(context);
-                    },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.grey.shade800,
-                      foregroundColor: Colors.white,
-                      padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 12),
-                      textStyle: const TextStyle(fontWeight: FontWeight.bold),
-                    ),
-                    child: const Text('Back to Home'),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      ElevatedButton(
+                        onPressed: _validateAndLogin,
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.amber,
+                          foregroundColor: Colors.black,
+                          padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 14),
+                          textStyle: const TextStyle(fontWeight: FontWeight.bold),
+                        ),
+                        child: const Text('Login'),
+                      ),
+                      const SizedBox(width: 16),
+                      ElevatedButton(
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (context) => const NewUserPage()),
+                          );
+                        },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.green.shade700,
+                          foregroundColor: Colors.white,
+                          padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 14),
+                          textStyle: const TextStyle(fontWeight: FontWeight.bold),
+                        ),
+                        child: const Text('Sign Up'),
+                      ),
+                    ],
                   ),
                 ],
               ),
